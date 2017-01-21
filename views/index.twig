@@ -1,0 +1,107 @@
+<html>
+<head>
+    <!-- Include stylesheet -->
+    <link href="https://cdn.quilljs.com/1.1.10/quill.snow.css" rel="stylesheet">
+</head>
+    <body>
+    <!-- Create the editor container -->
+    <div id="editor">
+        <p>Hello World!</p>
+        <p>Some initial <strong>bold</strong> text</p>
+        <p><br></p>
+    </div>
+    </body>
+
+    <!-- Include the Quill library -->
+    <script src="https://cdn.quilljs.com/1.1.10/quill.js"></script>
+
+    <!-- Initialize Quill editor -->
+    <script>
+        var toolbarOptions = [
+            ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+            ['blockquote', 'code-block'],
+
+            [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+            [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+            [{ 'direction': 'rtl' }],                         // text direction
+
+            [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+            [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+            [{ 'font': [] }],
+            [{ 'align': [] }],
+
+            ['clean'],                                         // remove formatting button
+            ['link']
+        ];
+
+        var quill = new Quill('#editor', {
+            modules: {
+                toolbar: toolbarOptions
+            },
+            theme: 'snow'
+        });
+
+        var delta = eval('("' + {{ content|raw }} + '")');
+        console.log(delta);
+        quill.setContents(delta);
+
+
+        var wsServer = 'ws://127.0.0.1:3890';
+        var websocket = new WebSocket(wsServer);
+
+        websocket.onopen = function (evt) {
+            console.log(websocket.readyState);
+
+            var message = new Object();
+            message.type = 'init';
+            message.pad_id = '{{ padId }}';
+            var message = JSON.stringify(message);
+            websocket.send(message);
+
+            //监听消息
+            websocket.onmessage = function (evt) {console.log(evt.data);
+                var delta = eval('(' + evt.data + ')');
+                console.log(delta);
+                var insert = delta.insert;
+                if (insert == 'enter') {
+                    insert = String.fromCharCode(10);
+                }
+                quill.updateContents(delta);
+            };
+
+        };
+
+        quill.on('text-change', function(delta, oldDelta, source) {
+            if (source == 'api') {
+                console.log("An API call triggered this change.");
+            } else if (source == 'user') {
+                var content = quill.getContents();
+
+//                var retain = delta['ops'][0].retain;
+//                var insert = delta['ops'][1].insert;
+//                if (delta['ops'][1].insert.charCodeAt(0) == 10) {
+//                    delta['ops'][1].insert = 'enter';
+//                }
+//                //var message = '{"retain": "'+retain+'", "insert": "'+insert+'",  "type": "content"}';
+                var message = new Object();
+                message.type = 'message';
+                message.insert = delta;
+                message.pad_id = '{{ padId }}';
+                message.content = quill.getContents();
+                var message = JSON.stringify(message);
+                console.log(message);
+                websocket.send(message);
+            }
+        });
+    </script>
+
+<style>
+    body{
+        margin: 0px;
+    }
+</style>
+</html>
