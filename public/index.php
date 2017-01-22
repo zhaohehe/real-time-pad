@@ -7,13 +7,14 @@ $app = require '../pad/Foundation/bootstrap.php';
 
 $app->get('/pad', function ($request, $response, $args) use ($app) {
 
-    $padId = str_random();    //generate random pad id
+    //$padId = str_random();    //generate random pad id
+    $padId = 'home_document';
     return $response->withStatus(200)->withHeader('Location', 'pad/'.$padId);
 });
 
 
 $app->get('/pad/{id}', function ($request, $response, $args) {
-    if ($args['id'] != 'B6ZqW0IB7F0l5Ok4') {
+    if ($args['id'] != 'B6ZqW0IB7F0l5Ok4' && $args['id'] != 'home_document') {
         exit('invalid pad!');
     }
     $pad = new \Pad\Models\Pad();
