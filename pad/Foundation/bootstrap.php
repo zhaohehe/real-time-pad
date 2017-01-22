@@ -5,8 +5,6 @@
 
 require __DIR__.'/../../vendor/autoload.php';
 
-$config_file = require __DIR__.'/../../config.php';    //require config file
-
 $config = [
     $config_file['settings']
 ];

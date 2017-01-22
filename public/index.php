@@ -3,6 +3,8 @@
  * Sometime too hot the eye of heaven shines
  */
 
+$config_file = require __DIR__.'/../config.php';    //require config file
+
 $app = require '../pad/Foundation/bootstrap.php';
 
 $app->get('/pad', function ($request, $response, $args) use ($app) {
@@ -13,7 +15,7 @@ $app->get('/pad', function ($request, $response, $args) use ($app) {
 });
 
 
-$app->get('/pad/{id}', function ($request, $response, $args) {
+$app->get('/pad/{id}', function ($request, $response, $args) use ($config_file) {
     if ($args['id'] != 'B6ZqW0IB7F0l5Ok4' && $args['id'] != 'home_document') {
         exit('invalid pad!');
     }

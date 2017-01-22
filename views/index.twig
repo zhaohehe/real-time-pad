@@ -50,7 +50,7 @@
         quill.setContents(delta);
 
 
-        var wsServer = 'ws://127.0.0.1:3890';
+        var wsServer = '{{ web_socket }}';
         var websocket = new WebSocket(wsServer);
 
         websocket.onopen = function (evt) {
