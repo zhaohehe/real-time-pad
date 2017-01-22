@@ -29,6 +29,7 @@ class PadController extends BaseController
             }
         }
         //update pad content
+        if ($padId != 'home_document')
         $this->pad->updateContent($content, $padId);
     }
 }
