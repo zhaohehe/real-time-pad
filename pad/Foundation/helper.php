@@ -43,8 +43,8 @@ if (! function_exists('config')) {
         $config_key = explode('.', $key);
         $config_key_first = $config_file[array_shift($config_key)];
 
-        $config_parser = function ($q, $w) {
-            return $q[$w];
+        $config_parser = function ($array, $stack) {
+            return $array[$stack];
         };
 
         return array_reduce($config_key, $config_parser, $config_key_first);

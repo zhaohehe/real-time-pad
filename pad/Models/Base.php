@@ -14,19 +14,40 @@ class Base
 
     protected $redis;
 
+    protected $mongo;
+
     protected $model;
 
+    /**
+     * Base constructor.
+     */
     public function __construct()
+    {
+        $this->setRedis();
+        $this->setMongo();
+        $db = $this->mongo->pad;    //init db
+
+        $table = $this->table;    //get table name
+
+        $this->model = $db->$table;
+
+    }
+
+    /**
+     * set redis instance
+     */
+    protected function setRedis()
     {
         $client = new Redis();
         $this->redis = $client->getClient();
+    }
 
-        $mogodb = new Client();
-
-        $db = $mogodb->pad;
-
-        $table = $this->table;
-        $this->model = $db->$table;
-
+    /**
+     * set mongo db instance
+     */
+    protected function setMongo()
+    {
+        $mongo = new Client();
+        $this->mongo = $mongo;
     }
 }
