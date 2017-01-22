@@ -10,7 +10,7 @@
             "Pad\\": "pad/"
         },
         "files": [
-            "helper.php"
+            "pad/Foundation/helper.php"
         ]
     },
     "repositories": {

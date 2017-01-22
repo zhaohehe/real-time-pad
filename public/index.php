@@ -3,24 +3,7 @@
  * Sometime too hot the eye of heaven shines
  */
 
-require '../vendor/autoload.php';
-
-$app = new \Slim\App();    //create app
-
-$container = $app->getContainer();    //get container
-
-$container['view'] = function ($container) {    // register template on container
-    $view = new \Slim\Views\Twig(__DIR__ .'/../views/', [
-        'cache' => false
-    ]);
-    $view->addExtension(new \Slim\Views\TwigExtension(
-        $container['router'],
-        $container['request']->getUri()
-    ));
-
-    return $view;
-};
-
+$app = require '../pad/Foundation/bootstrap.php';
 
 $app->get('/pad', function ($request, $response, $args) use ($app) {
 
@@ -35,8 +18,11 @@ $app->get('/pad/{id}', function ($request, $response, $args) {
     }
     $pad = new \Pad\Models\Pad();
 
+    $socket_client = $config_file['web_socket']['client'];
+
     return $this->view->render($response, 'index.twig', [
         'padId' => $args['id'],
+        'web_socket' => 'ws://'.$socket_client['host'].':'.$socket_client['port'],
         'content' => (string)$pad->getContent($args['id'])->content
     ]);
 })->setName('pad');

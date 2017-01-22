@@ -20,7 +20,10 @@ class Server
 
     public function __construct()
     {
-        $this->socketServer = new swoole_websocket_server('127.0.0.1', '3890');
+        $config = require __DIR__.'/../../../config.php';    //require config file
+        $socket_server = $config['web_socket']['server'];
+
+        $this->socketServer = new swoole_websocket_server($socket_server['host'], $socket_server['port']);
         $this->socketServer->set([
             'worker_num' => 8,
             'daemonize'  => false,
