@@ -21,6 +21,8 @@ class PadController extends BaseController
 
     public function deliverMessage($sender, $insert, $content, $padId, $socketServer)
     {
+        $config_file = require __DIR__.'/../../config.php';    //require config file
+
         $members = $this->pad->getMembersById($padId);
 
         foreach ($members as $key => $member) {
@@ -29,7 +31,8 @@ class PadController extends BaseController
             }
         }
         //update pad content
-        if ($padId != 'home_document')
-        $this->pad->updateContent($content, $padId);
+        if ($padId != 'home_document' || $config_file['home_update']) {
+            $this->pad->updateContent($content, $padId);
+        }
     }
 }

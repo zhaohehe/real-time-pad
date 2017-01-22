@@ -22,4 +22,6 @@ return [
             'port' => '3890'
         ],
     ],
+
+    'home_update' => false,
 ];
