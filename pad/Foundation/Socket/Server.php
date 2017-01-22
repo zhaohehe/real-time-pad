@@ -20,8 +20,7 @@ class Server
 
     public function __construct()
     {
-        $config = require __DIR__.'/../../../config.php';    //require config file
-        $socket_server = $config['web_socket']['server'];
+        $socket_server = config('web_socket.server');
 
         $this->socketServer = new swoole_websocket_server($socket_server['host'], $socket_server['port']);
         $this->socketServer->set([

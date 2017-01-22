@@ -6,7 +6,7 @@
 require __DIR__.'/../../vendor/autoload.php';
 
 $config = [
-    $config_file['settings']
+    config('settings')
 ];
 
 $app = new \Slim\App($config);
