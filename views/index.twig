@@ -64,13 +64,13 @@
 
             //监听消息
             websocket.onmessage = function (evt) {console.log(evt.data);
-                var delta = eval('(' + evt.data + ')');
-                console.log(delta);
-                var insert = delta.insert;
-                if (insert == 'enter') {
-                    insert = String.fromCharCode(10);
+                var message = eval('(' + evt.data + ')');
+                console.log(message.pad_id);
+               if (message.pad_id == "{{ padId }}") {
+                    var delta = message.insert;
+                    quill.updateContents(delta);
                 }
-                quill.updateContents(delta);
+
             };
 
         };

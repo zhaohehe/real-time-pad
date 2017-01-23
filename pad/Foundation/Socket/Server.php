@@ -57,9 +57,12 @@ class Server
 
         } elseif ($data->type == 'init') {
             $this->pad->join($sender, $data->pad_id);
+            $padId = $this->pad->getContent($data->pad_id)->pad_id;
             $content = $this->pad->getContent($data->pad_id)->content;
 
-            $socketServer->push($sender, $content);
+            $message = '{"insert":'.$content.',"pad_id":"'.$padId.'"}';
+
+            $socketServer->push($sender, $message);
         }
     }
 
@@ -69,13 +72,15 @@ class Server
     {
         $members = $this->pad->getMembersById($padId);
 
+        $message = '{"insert":'.$insert.',"pad_id":"'.$padId.'"}';
+
         foreach ($members as $key => $member) {
             if ($member != $sender) {
-                $socketServer->push($member, $insert);
+                $socketServer->push($member, $message);
             }
         }
         //update pad content
-        if (! in_array($padId, $this->pages) || config('page_update')) {var_dump($padId);
+        if (! in_array($padId, $this->pages) || config('page_update')) {
             $this->pad->updateContent($content, $padId);
         }
     }
