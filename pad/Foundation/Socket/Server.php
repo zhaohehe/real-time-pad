@@ -18,6 +18,12 @@ class Server
 
     private $socketServer;
 
+    protected $pages = [
+        'home',
+        'instruction',    //说明文档
+        'discuss',        //公共频道
+    ];
+
     public function __construct()
     {
         $socket_server = config('web_socket.server');
@@ -47,8 +53,7 @@ class Server
 //        ];
 
         if ($data->type == 'message') {
-            $pad = new PadController();
-            $pad->deliverMessage($sender, json_encode($data->insert), json_encode($data->content), $data->pad_id, $socketServer);
+            $this->deliverMessage($sender, json_encode($data->insert), json_encode($data->content), $data->pad_id, $socketServer);
 
         } elseif ($data->type == 'init') {
             $this->pad->join($sender, $data->pad_id);
@@ -57,6 +62,25 @@ class Server
             $socketServer->push($sender, $content);
         }
     }
+
+
+
+    protected function deliverMessage($sender, $insert, $content, $padId, $socketServer)
+    {
+        $members = $this->pad->getMembersById($padId);
+
+        foreach ($members as $key => $member) {
+            if ($member != $sender) {
+                $socketServer->push($member, $insert);
+            }
+        }
+        //update pad content
+        if (! in_array($padId, $this->pages) || config('page_update')) {var_dump($padId);
+            $this->pad->updateContent($content, $padId);
+        }
+    }
+
+
 
     public function onOpen($socketServer, $request)
     {

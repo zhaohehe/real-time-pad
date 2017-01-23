@@ -23,5 +23,5 @@ return [
         ],
     ],
 
-    'home_update' => false,
+    'page_update' => true,
 ];
