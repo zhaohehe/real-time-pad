@@ -21,7 +21,7 @@ class Server
     protected $pages = [
         'home',
         'instruction',    //说明文档
-        'discuss',        //公共频道
+        //'discuss',        //公共频道
     ];
 
     public function __construct()
