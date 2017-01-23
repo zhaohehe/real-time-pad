@@ -14,11 +14,6 @@ class Deliver implements ObserverInterface
 
     protected $pad;
 
-    protected $pages = [
-        'home',
-        'instruction',    //说明文档
-        //'discuss',        //公共频道
-    ];
     
     public function __construct()
     {
@@ -47,10 +42,6 @@ class Deliver implements ObserverInterface
             if ($member != $sender) {
                 $socketServer->push($member, $message);
             }
-        }
-        //update pad content
-        if (! in_array($padId, $this->pages) || config('page_update')) {
-            $this->pad->updateContent($content, $padId);
         }
     }
 }

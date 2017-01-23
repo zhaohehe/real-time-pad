@@ -7,6 +7,8 @@
 namespace Pad\Foundation\Socket;
 
 use Pad\Foundation\Socket\Events\Insert;
+use Pad\Foundation\Socket\Observers\Deliver;
+use Pad\Foundation\Socket\Observers\Update;
 use Pad\Models\Pad;
 use swoole_websocket_server;
 use Pad\Controllers\PadController;
@@ -47,7 +49,11 @@ class Server
 
         if ($data->type == 'message') {
 
-            event(new Insert([$data, $sender, $socketServer]));
+            $insertEvent = new Insert([$data, $sender, $socketServer]);
+            $insertEvent->registerObserver(new Deliver());
+            $insertEvent->registerObserver(new Update());
+
+            fire($insertEvent);
 
         } elseif ($data->type == 'init') {
 //            $this->pad->join($sender, $data->pad_id);

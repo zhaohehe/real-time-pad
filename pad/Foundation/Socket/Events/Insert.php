@@ -7,6 +7,7 @@
 namespace Pad\Foundation\Socket\Events;
 
 use Pad\Foundation\Interfaces\EventInterface;
+use Pad\Foundation\Interfaces\ObserverInterface;
 use Pad\Foundation\Socket\Observers\Deliver;
 
 class Insert implements EventInterface
@@ -21,15 +22,13 @@ class Insert implements EventInterface
         $this->data = $data;
     }
 
-    public function registerObserver()
+    public function registerObserver(ObserverInterface $observer)
     {
-        $this->observers[] = new Deliver();
+        $this->observers[] = $observer;
     }
 
     public function fire()
     {
-        $this->registerObserver();
-
         foreach ($this->observers as $key => $observer) {
             $observer->handle($this->data);
         }

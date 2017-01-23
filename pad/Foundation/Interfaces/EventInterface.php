@@ -8,7 +8,7 @@ namespace Pad\Foundation\Interfaces;
 
 interface EventInterface
 {
-    public function registerObserver();
+    public function registerObserver(ObserverInterface $observer);
 
     public function fire();
 

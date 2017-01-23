@@ -53,13 +53,13 @@ if (! function_exists('config')) {
 
 
 
-if (! function_exists('event')) {
+if (! function_exists('fire')) {
 
     /**
      * @param \Pad\Foundation\Interfaces\EventInterface $event
      * @return mixed
      */
-    function event(\Pad\Foundation\Interfaces\EventInterface $event)
+    function fire(\Pad\Foundation\Interfaces\EventInterface $event)
     {
         return $event->fire();
     }
