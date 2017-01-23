@@ -50,3 +50,17 @@ if (! function_exists('config')) {
         return array_reduce($config_key, $config_parser, $config_key_first);
     }
 }
+
+
+
+if (! function_exists('event')) {
+
+    /**
+     * @param \Pad\Foundation\Interfaces\EventInterface $event
+     * @return mixed
+     */
+    function event(\Pad\Foundation\Interfaces\EventInterface $event)
+    {
+        return $event->fire();
+    }
+}

@@ -45,9 +45,9 @@
             theme: 'snow'
         });
 
-        var delta = eval('("' + {{ content|raw }} + '")');
-        console.log(delta);
-        quill.setContents(delta);
+        {#var delta = eval('("' + {{ content|raw }} + '")');#}
+        {#console.log(delta);#}
+        quill.setContents({{ content|raw }});
 
 
         var wsServer = '{{ web_socket }}';
@@ -56,11 +56,11 @@
         websocket.onopen = function (evt) {
             console.log(websocket.readyState);
 
-            var message = new Object();
-            message.type = 'init';
-            message.pad_id = '{{ padId }}';
-            var message = JSON.stringify(message);
-            websocket.send(message);
+            {#var message = new Object();#}
+            {#message.type = 'init';#}
+            {#message.pad_id = '{{ padId }}';#}
+            {#var message = JSON.stringify(message);#}
+            {#websocket.send(message);#}
 
             //监听消息
             websocket.onmessage = function (evt) {console.log(evt.data);
