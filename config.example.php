@@ -24,4 +24,5 @@ return [
     ],
 
     'page_update' => true,
+
 ];
