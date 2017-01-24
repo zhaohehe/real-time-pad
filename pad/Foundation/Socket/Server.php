@@ -6,8 +6,10 @@
 
 namespace Pad\Foundation\Socket;
 
+use Pad\Foundation\Redis\Redis;
 use Pad\Foundation\Socket\Events\Insert;
 use Pad\Foundation\Socket\Observers\Deliver;
+use Pad\Foundation\Socket\Observers\History;
 use Pad\Foundation\Socket\Observers\Update;
 use Pad\Models\Pad;
 use swoole_websocket_server;
@@ -52,6 +54,7 @@ class Server
             $insertEvent = new Insert([$data, $sender, $socketServer]);
             $insertEvent->registerObserver(new Deliver());
             $insertEvent->registerObserver(new Update());
+            $insertEvent->registerObserver(new History());
 
             fire($insertEvent);
 
@@ -63,9 +66,24 @@ class Server
 //            $message = '{"insert":'.$content.',"pad_id":"'.$padId.'"}';
 //
 //            $socketServer->push($sender, $message);
+        } elseif ($data->type = 'history') {
+            $redis = new Redis();
+            $list = $redis->getClient()->lrange('discuss_history', 0, -1);
+
+           foreach ($list as $k => $v) {
+               $message = '{"insert":'.$v.',"pad_id":"discuss.history"}';
+               $socketServer->push($sender, $message);
+               usleep(200000);
+           }
+
         }
     }
 
+
+    public function onTimer($serv, $interval)
+    {
+        echo "Timer[$interval] is call\n";
+    }
 
     public function onOpen($socketServer, $request)
     {

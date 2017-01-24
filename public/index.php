@@ -5,10 +5,14 @@
 
 $app = require '../pad/Foundation/bootstrap.php';
 
-$app->get('/pad', 'Pad\Controllers\PadController:home');
+$padController = 'Pad\Controllers\PadController';
 
-$app->get('/pad/private', 'Pad\Controllers\PadController:secret');
+$app->get('/pad', $padController.':home');
 
-$app->get('/pad/{id}', 'Pad\Controllers\PadController:show');
+$app->get('/pad/private', $padController.':secret');
+
+$app->get('/pad/{id}', $padController.':show');
+
+$app->get('/pad/discuss/history', $padController.':history');
 
 $app->run();

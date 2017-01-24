@@ -79,4 +79,16 @@ class PadController extends BaseController
         }
     }
 
+
+    public function history($request, $response, $args)
+    {
+        $socket_client = config('web_socket.client');
+
+        return $this->container->view->render($response, 'index.twig', [
+            'padId' => 'discuss.history',
+            'web_socket' => 'ws://'.$socket_client['host'].':'.$socket_client['port'],
+            'content' => '{"type":"message","insert":{"ops":[{"delete":1}]},"pad_id":"discuss","content":{"ops":[{"insert":"\n"}]}}'
+        ]);
+    }
+
 }

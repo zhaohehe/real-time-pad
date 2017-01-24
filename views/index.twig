@@ -60,6 +60,16 @@
             {#var message = JSON.stringify(message);#}
             {#websocket.send(message);#}
 
+            if ('discuss.history' == '{{ padId }}') {
+                //清空屏幕
+
+                var message = new Object();
+                message.type = 'history';
+                message.pad_id = '{{ padId }}';
+                var message = JSON.stringify(message);
+                websocket.send(message);
+            }
+
             //监听消息
             websocket.onmessage = function (evt) {console.log(evt.data);
                 var message = eval('(' + evt.data + ')');
