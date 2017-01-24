@@ -73,7 +73,7 @@ class Server
            foreach ($list as $k => $v) {
                $message = '{"insert":'.$v.',"pad_id":"discuss.history"}';
                $socketServer->push($sender, $message);
-               usleep(200000);
+               usleep(100000);
            }
 
         }
