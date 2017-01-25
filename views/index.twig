@@ -74,7 +74,7 @@
             websocket.onmessage = function (evt) {console.log(evt.data);
                 var message = eval('(' + evt.data + ')');
                 console.log(message.pad_id);
-               if (message.pad_id == "{{ padId }}") {
+               if (message.pad_id == "{{ padId }}" && message.insert != 'init') {
                     var delta = message.insert;
                     quill.updateContents(delta);
                 }
