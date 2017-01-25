@@ -54,11 +54,11 @@
         websocket.onopen = function (evt) {
             console.log(websocket.readyState);
 
-            {#var message = new Object();#}
-            {#message.type = 'init';#}
-            {#message.pad_id = '{{ padId }}';#}
-            {#var message = JSON.stringify(message);#}
-            {#websocket.send(message);#}
+            var message = new Object();
+            message.type = 'init';
+            message.pad_id = '{{ padId }}';
+            var message = JSON.stringify(message);
+            websocket.send(message);
 
             if ('discuss.history' == '{{ padId }}') {
                 //清空屏幕

@@ -61,19 +61,25 @@ class Pad extends Base
 
     public function getMembersById($id)
     {
-        return $this->redis->smembers('pad:'.$id);
+        return $this->model->find(['pad_id' => $id, 'type' => 'group']);
     }
 
 
     public function join($user, $pad)
     {
-        $this->redis->sadd('pad:'.$pad, $user);
+        if (!$this->model->findOne(['type' => 'group', 'pad_id' => $pad, 'user' => $user])) {
+            $this->model->insertOne([
+                'type'   => 'group',
+                'pad_id' => $pad,
+                'user'   => $user
+            ]);
+        }
     }
 
 
-    public function remove($user, $pad)
+    public function remove($user)
     {
-
+        $this->model->deleteMany(['user' => $user, 'type' => 'group']);
     }
 
 }

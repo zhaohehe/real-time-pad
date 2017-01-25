@@ -47,43 +47,36 @@ class Server
         $sender = $frame->fd;
         $data = json_decode($frame->data);
 
-        $this->pad->join($sender, $data->pad_id);
+        switch ($data->type)
+        {
+            case 'init':
+                $this->pad->join($sender, $data->pad_id);
+                break;
 
-        if ($data->type == 'message') {
+            case 'message':
+                $insertEvent = new Insert([$data, $sender, $socketServer]);
+                $insertEvent->registerObserver(new Deliver());
+                $insertEvent->registerObserver(new Update());
+                $insertEvent->registerObserver(new History());
 
-            $insertEvent = new Insert([$data, $sender, $socketServer]);
-            $insertEvent->registerObserver(new Deliver());
-            $insertEvent->registerObserver(new Update());
-            $insertEvent->registerObserver(new History());
+                fire($insertEvent);
+                break;
 
-            fire($insertEvent);
+            case 'history':
+                $redis = new Redis();
+                $list = $redis->getClient()->lrange('discuss_history', 0, -1);
 
-        } elseif ($data->type == 'init') {
-//            $this->pad->join($sender, $data->pad_id);
-//            $padId = $this->pad->getContent($data->pad_id)->pad_id;
-//            $content = $this->pad->getContent($data->pad_id)->content;
-//
-//            $message = '{"insert":'.$content.',"pad_id":"'.$padId.'"}';
-//
-//            $socketServer->push($sender, $message);
-        } elseif ($data->type = 'history') {
-            $redis = new Redis();
-            $list = $redis->getClient()->lrange('discuss_history', 0, -1);
-
-           foreach ($list as $k => $v) {
-               $message = '{"insert":'.$v.',"pad_id":"discuss.history"}';
-               $socketServer->push($sender, $message);
-               usleep(50000);
-           }
-
+                foreach ($list as $k => $v) {
+                    $message = '{"insert":'.$v.',"pad_id":"discuss.history"}';
+                    $socketServer->push($sender, $message);
+                    usleep(50000);
+                }
+                break;
         }
     }
 
 
-    public function onTimer($serv, $interval)
-    {
-        echo "Timer[$interval] is call\n";
-    }
+
 
     public function onOpen($socketServer, $request)
     {
@@ -94,7 +87,7 @@ class Server
     public function onClose($socketServer, $fd)
     {
         echo "client-{$fd} is closed\n";
-        //$this->pad->remove($fd);
+        $this->pad->remove($fd);
     }
 
 

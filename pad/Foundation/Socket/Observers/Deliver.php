@@ -39,8 +39,8 @@ class Deliver implements ObserverInterface
         $message = '{"insert":'.$insert.',"pad_id":"'.$padId.'"}';
 
         foreach ($members as $key => $member) {
-            if ($member != $sender) {
-                $socketServer->push($member, $message);
+            if ($member['user'] != $sender) {
+               $socketServer->push($member['user'], $message);
             }
         }
     }
