@@ -17,7 +17,7 @@ class Pad extends Base
     public function create($padId, $ip)
     {
         $this->model->updateOne(
-            ['pad_id' => $padId],
+            ['pad_id' => $padId, 'type' => 'content'],
             ['$set' => [
                 'ip'      => $ip,
                 'content' => $this->privateContent
@@ -30,7 +30,7 @@ class Pad extends Base
 
     public function exeist($padId)
     {
-        return $this->model->findOne(['pad_id' => $padId]);
+        return $this->model->findOne(['pad_id' => $padId, 'type' => 'content']);
     }
 
 
@@ -42,13 +42,13 @@ class Pad extends Base
 
     public function updateContent($content, $padId)
     {
-        $this->model->updateOne(['pad_id' => $padId], ['$set' => ['content' => $content]]);
+        $this->model->updateOne(['pad_id' => $padId, 'type' => 'content'], ['$set' => ['content' => $content]]);
     }
 
 
     public function getContent($padId)
     {
-        return $this->model->findOne(['pad_id' => $padId]);
+        return $this->model->findOne(['pad_id' => $padId, 'type' => 'content']);
     }
 
     public function getByIp($ip)
