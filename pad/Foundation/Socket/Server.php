@@ -51,9 +51,9 @@ class Server
         {
             case 'init':
                 $this->pad->join($sender, $data->pad_id);
-                $insert = 'init';
-                $message = '{"insert":'.$insert.',"pad_id":"discuss.history"}';
-                $socketServer->push($sender, $message);
+//                $insert = 'init';
+//                $message = '{"insert":'.$insert.',"pad_id":"discuss.history"}';
+//                $socketServer->push($sender, $message);
                 break;
 
             case 'message':
